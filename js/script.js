@@ -1,118 +1,197 @@
+import {
+  INPUT_MESSAGE,
+  WIN_MESSAGE,
+  LOSE_MESSAGE,
+} from "../lang/messages/en/user.js";
+
+/**
+ * ChatGPT was used for assisting with bug fixing and code generation for keeping the buttons/
+ * boxes within the browser window during shuffling.
+ */
+
+/**
+ * Represents an instance of the memory game
+ */
+
 class Game {
-  constructor() {
-      this.buttons = [];
-      this.originalOrder = [];
-      this.currentOrder = [];
-  }
+  constructor(numButtons) {
+    this.numButtons = numButtons;
+    this.colors = [
+      "red",
+      "green",
+      "blue",
+      "yellow",
+      "orange",
+      "purple",
+      "cyan",
+    ];
+    this.currentValue = 1;
+    this.buttons = [];
+    this.container = document.getElementById("gameContainer");
+    this.container.innerHTML = "";
 
-  startGame(buttonCount) {
-      this.clearGameArea();
-      this.createButtons(buttonCount);
-      this.originalOrder = [...this.buttons];
-      setTimeout(() => this.scrambleButtons(buttonCount), buttonCount * 1000);
-  }
+    const windowWidth = window.innerWidth - 50;
 
-  clearGameArea() {
-      const gameArea = document.getElementById('game-area');
-      gameArea.innerHTML = '';
-      this.buttons = [];
-  }
+    let startX = 50;
+    let startY = 50;
+    const spacingX = 250;
+    const spacingY = 150;
 
-  createButtons(count) {
-      const gameArea = document.getElementById('game-area');
-      for (let i = 0; i < count; i++) {
-          const button = new GameButton(i + 1);
-          this.buttons.push(button);
-          gameArea.appendChild(button.element);
+    for (let i = 0; i < numButtons; i++) {
+      const rndIndex = Math.floor(Math.random() * this.colors.length);
+      const color = this.colors.splice(rndIndex, 1)[0];
+
+      if (startX + spacingX > windowWidth) {
+        startX = 50;
+        startY += spacingY;
       }
+
+      const button = new Button(color, "10em", "5em", i + 1, startX, startY);
+      this.buttons.push(button);
+      button.draw(this.container);
+
+      startX += spacingX;
+    }
   }
 
-  scrambleButtons(times) {
-      let moves = 0;
-      const interval = setInterval(() => {
-          if (moves >= times) {
-              clearInterval(interval);
-              this.hideButtonNumbers();
-              this.makeButtonsClickable();
-          } else {
-              this.shuffle();
-              moves++;
-          }
+  run() {
+    setTimeout(() => {
+      let shuffleCount = 0;
+      const shuffleInterval = setInterval(() => {
+        this.shuffleButtons();
+        shuffleCount++;
+
+        if (shuffleCount == this.numButtons) {
+          clearInterval(shuffleInterval);
+
+          setTimeout(() => {
+            this.hideNumbers();
+          }, 1000);
+          this.activateButtons();
+        }
       }, 2000);
+    }, this.numButtons * 1000);
   }
 
-  shuffle() {
-      this.buttons.forEach((btn) => btn.setRandomPosition());
+  hideNumbers() {
+    this.buttons.forEach((button) => button.toggleValue());
   }
 
-  hideButtonNumbers() {
-      this.buttons.forEach((btn) => btn.hideNumber());
+  shuffleButtons() {
+    //width of buttons in pixels, approximated from actual em sizes.
+    const buttonWidth = 195;
+    const buttonHeight = 105;
+
+    const maxX = this.container.offsetWidth - buttonWidth;
+    const maxY = this.container.offsetHeight - buttonHeight;
+
+    this.buttons.forEach((button) => {
+      const rndX = Math.floor(Math.random() * maxX);
+      const rndY = Math.floor(Math.random() * maxY);
+
+      button.setLocation(rndX, rndY);
+    });
   }
 
-  makeButtonsClickable() {
-      this.currentOrder = [];
-      this.buttons.forEach((btn) => {
-          btn.element.onclick = () => this.handleButtonClick(btn);
-      });
+  activateButtons() {
+    this.buttons.forEach((button) => {
+      button.element.addEventListener("click", () => this.handleClick(button));
+    });
   }
 
-  handleButtonClick(button) {
-      const expected = this.originalOrder[this.currentOrder.length];
-      if (button.number === expected.number) {
-          this.currentOrder.push(button);
-          button.revealNumber();
-          if (this.currentOrder.length === this.originalOrder.length) {
-              alert(messages.success);
-          }
-      } else {
-          alert(messages.failure);
-          this.revealCorrectOrder();
+  handleClick(button) {
+    if (this.currentValue === button.value) {
+      button.toggleValue();
+
+      if (this.currentValue == this.numButtons) {
+        alert(WIN_MESSAGE);
+        this.resetGame();
       }
+      this.currentValue++;
+    } else {
+      alert(LOSE_MESSAGE);
+      this.resetGame();
+    }
   }
 
-  revealCorrectOrder() {
-      this.originalOrder.forEach((btn) => btn.revealNumber());
+  resetGame() {
+    this.container.innerHTML = "";
+    this.currentValue = 1;
   }
 }
 
-class GameButton {
-  constructor(number) {
-      this.number = number;
-      this.element = this.createButton();
+/**
+ * Button class to represent a game button.
+ */
+class Button {
+  constructor(color, width, height, value, x, y) {
+    this.color = color;
+    this.width = width;
+    this.height = height;
+    this.value = value;
+    this.x = x;
+    this.y = y;
+    this.hidden = false;
+    this.element = null; // this will be a reference to the dom object when it is created later
   }
 
-  createButton() {
-      const button = document.createElement('button');
-      button.textContent = this.number;
-      button.style.position = 'absolute';
-      this.setRandomPosition();
-      return button;
+  draw(container) {
+    const button = document.createElement("div");
+    button.style.backgroundColor = this.color;
+    button.style.width = this.width;
+    button.style.height = this.height;
+    button.style.position = "absolute";
+    button.style.left = `${this.x}px`;
+    button.style.top = `${this.y}px`;
+    button.style.display = "flex";
+    button.style.alignItems = "center";
+    button.style.justifyContent = "center";
+    button.style.fontSize = "1.5em";
+    button.style.border = "solid #000000 1px";
+    button.style.cursor = "pointer";
+    button.innerText = this.hidden ? "" : this.value;
+
+    container.appendChild(button);
+    this.element = button;
   }
 
-  setRandomPosition() {
-      const gameArea = document.getElementById('game-area');
-      const maxWidth = gameArea.offsetWidth - 100;
-      const maxHeight = gameArea.offsetHeight - 50;
-      this.element.style.left = Math.random() * maxWidth + 'px';
-      this.element.style.top = Math.random() * maxHeight + 'px';
+  setLocation(x, y) {
+    this.x = x;
+    this.y = y;
+    this.element.style.left = `${this.x}px`;
+    this.element.style.top = `${this.y}px`;
   }
 
-  hideNumber() {
-      this.element.textContent = '';
-  }
-
-  revealNumber() {
-      this.element.textContent = this.number;
+  toggleValue() {
+    this.hidden = !this.hidden;
+    this.element.innerText = this.hidden ? "" : this.value;
   }
 }
 
-// Initialize game
-document.getElementById('start-game').onclick = () => {
-  const buttonCount = parseInt(document.getElementById('button-count').value, 10);
-  if (buttonCount < 3 || buttonCount > 7) {
-      alert(messages.invalidInput);
-      return;
+/**
+ * Input class holds player input information and a validate method.
+ */
+class Input {
+  constructor(numButtons) {
+    this.numButtons = numButtons;
   }
-  const game = new Game();
-  game.startGame(buttonCount);
-};
+
+  validateEntry() {
+    const num = Number(this.numButtons);
+    if (isNaN(num) || this.numButtons > 7 || this.numButtons < 3) {
+      alert(INPUT_MESSAGE);
+      return false;
+    }
+    return true;
+  }
+}
+
+document.getElementById("startButton").addEventListener("click", function () {
+  const numButtons = document.getElementById("buttonCount").value;
+  const input = new Input(numButtons);
+
+  if (input.validateEntry()) {
+    const game = new Game(input.numButtons);
+    game.run();
+  }
+});
