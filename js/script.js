@@ -165,7 +165,7 @@ class Game {
     if (this.currentValue === button.value) {
       button.toggleValue(); // Ensure the button value is toggled first
   
-      if (this.currentValue === this.numButtons) {
+      if (this.currentValue == this.numButtons) {
         setTimeout(() => {
           alert(WIN_MESSAGE); // Delay the alert to allow the UI to update
           this.resetGame();
