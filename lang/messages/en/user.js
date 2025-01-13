@@ -1,13 +1,12 @@
-// lang/messages/en/user.js
+import { MIN_BUTTONS, MAX_BUTTONS } from "../../../js/classes/gameController.js";
 
-const MESSAGES = {
-    INPUT_LABEL: "kine buttons dikhane hai?",
-    GO_BUTTON_TEXT: "start karo",
-    INPUT_VALIDATION_ALERT: "number likho",
-    EXCELLENT_MEMORY: "goodddddddddddddddddddddddd",
-    WRONG_ORDER: "baddddddddd",
-    GAME_OVER: "doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-};
+export const HEADER_TEXT = "Lab 0 by Davin Leong";
+export const QUESTION_TEXT = "How many buttons to create?";
+export const BUTTON_TEXT = "Go!";
+export let INPUT_ERROR_TEXT = ``;
+export const WINNER_TEXT = "Excellent memory!";
+export const LOSER_TEXT = "Wrong order!";
 
-// Exporting the messages object so that it can be imported in script.js
-export default MESSAGES;
+export function initializeConstantsFromGame() {
+  INPUT_ERROR_TEXT = `Please enter a number between ${MIN_BUTTONS} and ${MAX_BUTTONS}`;
+}
