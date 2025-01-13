@@ -16,41 +16,34 @@ import {
 class Game {
   constructor(numButtons) {
     this.numButtons = numButtons;
-    this.colors = [
-      "red",
-      "green",
-      "blue",
-      "yellow",
-      "orange",
-      "purple",
-      "cyan",
-    ];
+    this.colors = ["red", "green", "blue", "yellow", "orange", "purple", "cyan"];
     this.currentValue = 1;
     this.buttons = [];
     this.container = document.getElementById("gameContainer");
     this.container.innerHTML = "";
 
-    const windowWidth = window.innerWidth - 50;
+    const windowWidth = window.innerWidth - 50; // Adjust for container padding
+    const buttonWidth = 10 * 16; // 10em converted to pixels (1em = 16px)
+    const buttonHeight = 5 * 16; // 5em converted to pixels
+    const gap = 16; // 1em gap in pixels
 
     let startX = 50;
     let startY = 50;
-    const spacingX = 250;
-    const spacingY = 150;
 
     for (let i = 0; i < numButtons; i++) {
       const rndIndex = Math.floor(Math.random() * this.colors.length);
       const color = this.colors.splice(rndIndex, 1)[0];
 
-      if (startX + spacingX > windowWidth) {
-        startX = 50;
-        startY += spacingY;
+      if (startX + buttonWidth + gap > windowWidth) {
+        startX = 50; // Reset X position
+        startY += buttonHeight + gap; // Move to the next row
       }
 
       const button = new Button(color, "10em", "5em", i + 1, startX, startY);
       this.buttons.push(button);
       button.draw(this.container);
 
-      startX += spacingX;
+      startX += buttonWidth + gap; // Move to the next position
     }
   }
 
@@ -77,22 +70,6 @@ class Game {
     this.buttons.forEach((button) => button.toggleValue());
   }
 
-  // shuffleButtons() {
-  //   //width of buttons in pixels, approximated from actual em sizes.
-  //   const buttonWidth = 195;
-  //   const buttonHeight = 105;
-
-  //   const maxX = this.container.offsetWidth - buttonWidth;
-  //   const maxY = this.container.offsetHeight - buttonHeight;
-
-  //   this.buttons.forEach((button) => {
-  //     const rndX = Math.floor(Math.random() * maxX);
-  //     const rndY = Math.floor(Math.random() * maxY);
-
-  //     button.setLocation(rndX, rndY);
-  //   });
-  // }
-
   shuffleButtons() {
     this.buttons.forEach((button) => {
       const buttonRect = button.element.getBoundingClientRect(); // Get dimensions
@@ -112,70 +89,6 @@ class Game {
       button.element.addEventListener("click", () => this.handleClick(button));
     });
   }
-
-  // handleClick(button) {
-  //   if (this.currentValue === button.value) {
-  //     button.toggleValue();
-
-  //     if (this.currentValue == this.numButtons) {
-  //       alert(WIN_MESSAGE);
-  //       this.resetGame();
-  //     }
-  //     this.currentValue++;
-  //   } else {
-  //     alert(LOSE_MESSAGE);
-  //     this.resetGame();
-  //   }
-  // }
-
-  // handleClick(button) {
-  //   if (this.currentValue === button.value) {
-  //     button.toggleValue();
-  
-  //     if (this.currentValue == this.numButtons) {
-  //       alert(WIN_MESSAGE); // Show winning message
-  //       this.resetGame();
-  //     }
-  //     this.currentValue++;
-  //   } else {
-  //     alert(LOSE_MESSAGE); // Show losing message
-  //     // Reveal all button values for correct order
-  //     this.buttons.forEach((btn) => {
-  //       btn.hidden = false;
-  //       btn.element.innerText = btn.value;
-  //     });
-  //     this.resetGame();
-  //   }
-  // }
-
-  // handleLose() {
-  //   this.buttons.forEach((btn) => {
-  //     btn.hidden = false;
-  //     btn.element.innerText = btn.value; // Reveal all button values
-  //   });
-  
-  //   setTimeout(() => {
-  //     alert(LOSE_MESSAGE); // Show losing message after revealing correct order
-  //     this.resetGame();
-  //   }, 100); // Slight delay to allow UI to update
-  // }
-  
-  
-  // handleClick(button) {
-  //   if (this.currentValue === button.value) {
-  //     button.toggleValue(); // Ensure the button value is toggled first
-  
-  //     if (this.currentValue === this.numButtons) {
-  //       setTimeout(() => {
-  //         alert(WIN_MESSAGE); // Delay the alert to allow the UI to update
-  //         this.resetGame();
-  //       }, 100); // Slight delay to show the last button's number
-  //     }
-  //     this.currentValue++;
-  //   } else {
-  //     this.handleLose(); // Call a dedicated method for losing
-  //   }
-  // }
 
   handleClick(button) {
     // Check if the clicked button matches the current sequence value
@@ -216,10 +129,6 @@ class Game {
     // this.buttons = []; // Clear the buttons array
   }
   
-  // resetGame() {
-  //   this.container.innerHTML = "";
-  //   this.currentValue = 1;
-  // }
   resetGame() {
     this.container.innerHTML = ""; // Clear all buttons
     this.currentValue = 1; // Reset the sequence counter
@@ -254,7 +163,7 @@ class Button {
     button.style.display = "flex";
     button.style.alignItems = "center";
     button.style.justifyContent = "center";
-    button.style.fontSize = "1.5em";
+    // button.style.fontSize = "1.5em";
     button.style.border = "solid #000000 1px";
     button.style.cursor = "pointer";
     button.innerText = this.hidden ? "" : this.value;

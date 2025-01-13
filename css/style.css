@@ -5,16 +5,3 @@
   overflow: hidden;
 }
 
-#gameContainer div {
-  height: 5em;
-  width: 10em;
-  text-align: center;
-  line-height: 5em; /* Center text vertically */
-  font-size: 1.2em;
-  border: 1px solid black;
-  background-color: lightgray; /* Default color */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
