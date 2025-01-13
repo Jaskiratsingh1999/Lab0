@@ -132,7 +132,7 @@ class Game {
     if (this.currentValue === button.value) {
       button.toggleValue();
   
-      if (this.currentValue === this.numButtons) {
+      if (this.currentValue == this.numButtons) {
         alert(WIN_MESSAGE); // Show winning message
         this.resetGame();
       }
