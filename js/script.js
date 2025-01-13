@@ -148,35 +148,73 @@ class Game {
   //   }
   // }
 
-  handleLose() {
-    this.buttons.forEach((btn) => {
-      btn.hidden = false;
-      btn.element.innerText = btn.value; // Reveal all button values
-    });
+  // handleLose() {
+  //   this.buttons.forEach((btn) => {
+  //     btn.hidden = false;
+  //     btn.element.innerText = btn.value; // Reveal all button values
+  //   });
   
-    setTimeout(() => {
-      alert(LOSE_MESSAGE); // Show losing message after revealing correct order
-      this.resetGame();
-    }, 100); // Slight delay to allow UI to update
-  }
+  //   setTimeout(() => {
+  //     alert(LOSE_MESSAGE); // Show losing message after revealing correct order
+  //     this.resetGame();
+  //   }, 100); // Slight delay to allow UI to update
+  // }
   
   
+  // handleClick(button) {
+  //   if (this.currentValue === button.value) {
+  //     button.toggleValue(); // Ensure the button value is toggled first
+  
+  //     if (this.currentValue === this.numButtons) {
+  //       setTimeout(() => {
+  //         alert(WIN_MESSAGE); // Delay the alert to allow the UI to update
+  //         this.resetGame();
+  //       }, 100); // Slight delay to show the last button's number
+  //     }
+  //     this.currentValue++;
+  //   } else {
+  //     this.handleLose(); // Call a dedicated method for losing
+  //   }
+  // }
+
   handleClick(button) {
+    // Check if the clicked button matches the current sequence value
     if (this.currentValue === button.value) {
-      button.toggleValue(); // Ensure the button value is toggled first
+      button.toggleValue(); // Reveal the button's number
   
-      if (this.currentValue == this.numButtons) {
+      // Check if the last button in the sequence was clicked correctly
+      if (this.currentValue === this.numButtons) {
+        // Delay to ensure UI updates before showing the win message
         setTimeout(() => {
-          alert(WIN_MESSAGE); // Delay the alert to allow the UI to update
-          this.resetGame();
-        }, 100); // Slight delay to show the last button's number
+          alert(WIN_MESSAGE); // Show winning message
+          this.resetGame(); // Reset the game
+        }, 100);
       }
-      this.currentValue++;
+      this.currentValue++; // Move to the next value in the sequence
     } else {
-      this.handleLose(); // Call a dedicated method for losing
+      this.handleLose(); // Call the losing logic
     }
   }
+  
+  handleLose() {
+    // Reveal all button values
+    this.buttons.forEach((btn) => {
+      btn.hidden = false;
+      btn.element.innerText = btn.value; // Ensure the correct number is displayed
+    });
+  
+    // Delay to allow UI updates before showing the losing message
+    setTimeout(() => {
+      alert(LOSE_MESSAGE); // Show losing message
+      this.resetGame(); // Reset the game
+    }, 200); // Small delay for better user experience
+  }
 
+  resetGame() {
+    this.container.innerHTML = ""; // Clear all buttons from the container
+    this.currentValue = 1; // Reset the sequence counter
+    this.buttons = []; // Clear the buttons array
+  }
   
   // resetGame() {
   //   this.container.innerHTML = "";
