@@ -183,12 +183,12 @@ class Game {
       button.toggleValue(); // Reveal the button's number
   
       // Check if the last button in the sequence was clicked correctly
-      if (this.currentValue === this.numButtons) {
+      if (this.currentValue == this.numButtons) {
         // Delay to ensure UI updates before showing the win message
         setTimeout(() => {
           alert(WIN_MESSAGE); // Show winning message
           this.resetGame(); // Reset the game
-        }, 100);
+        });
       }
       this.currentValue++; // Move to the next value in the sequence
     } else {
@@ -213,7 +213,7 @@ class Game {
   resetGame() {
     this.container.innerHTML = ""; // Clear all buttons from the container
     this.currentValue = 1; // Reset the sequence counter
-    this.buttons = []; // Clear the buttons array
+    // this.buttons = []; // Clear the buttons array
   }
   
   // resetGame() {
