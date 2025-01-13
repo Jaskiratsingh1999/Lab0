@@ -77,35 +77,21 @@ class Game {
     this.buttons.forEach((button) => button.toggleValue());
   }
 
-  // shuffleButtons() {
-  //   //width of buttons in pixels, approximated from actual em sizes.
-  //   const buttonWidth = 195;
-  //   const buttonHeight = 105;
-
-  //   const maxX = this.container.offsetWidth - buttonWidth;
-  //   const maxY = this.container.offsetHeight - buttonHeight;
-
-  //   this.buttons.forEach((button) => {
-  //     const rndX = Math.floor(Math.random() * maxX);
-  //     const rndY = Math.floor(Math.random() * maxY);
-
-  //     button.setLocation(rndX, rndY);
-  //   });
-  // }
-
   shuffleButtons() {
+    //width of buttons in pixels, approximated from actual em sizes.
+    const buttonWidth = 195;
+    const buttonHeight = 105;
+
+    const maxX = this.container.offsetWidth - buttonWidth;
+    const maxY = this.container.offsetHeight - buttonHeight;
+
     this.buttons.forEach((button) => {
-      const buttonRect = button.element.getBoundingClientRect(); // Get dimensions
-      const maxX = this.container.offsetWidth - buttonRect.width;
-      const maxY = this.container.offsetHeight - buttonRect.height;
-  
       const rndX = Math.floor(Math.random() * maxX);
       const rndY = Math.floor(Math.random() * maxY);
-  
+
       button.setLocation(rndX, rndY);
     });
   }
-  
 
   activateButtons() {
     this.buttons.forEach((button) => {
@@ -113,81 +99,25 @@ class Game {
     });
   }
 
-  // handleClick(button) {
-  //   if (this.currentValue === button.value) {
-  //     button.toggleValue();
-
-  //     if (this.currentValue == this.numButtons) {
-  //       alert(WIN_MESSAGE);
-  //       this.resetGame();
-  //     }
-  //     this.currentValue++;
-  //   } else {
-  //     alert(LOSE_MESSAGE);
-  //     this.resetGame();
-  //   }
-  // }
-
-  // handleClick(button) {
-  //   if (this.currentValue === button.value) {
-  //     button.toggleValue();
-  
-  //     if (this.currentValue == this.numButtons) {
-  //       alert(WIN_MESSAGE); // Show winning message
-  //       this.resetGame();
-  //     }
-  //     this.currentValue++;
-  //   } else {
-  //     alert(LOSE_MESSAGE); // Show losing message
-  //     // Reveal all button values for correct order
-  //     this.buttons.forEach((btn) => {
-  //       btn.hidden = false;
-  //       btn.element.innerText = btn.value;
-  //     });
-  //     this.resetGame();
-  //   }
-  // }
-
-  handleLose() {
-    this.buttons.forEach((btn) => {
-      btn.hidden = false;
-      btn.element.innerText = btn.value; // Reveal all button values
-    });
-  
-    setTimeout(() => {
-      alert(LOSE_MESSAGE); // Show losing message after revealing correct order
-      this.resetGame();
-    }, 100); // Slight delay to allow UI to update
-  }
-  
-  
   handleClick(button) {
     if (this.currentValue === button.value) {
-      button.toggleValue(); // Ensure the button value is toggled first
-  
+      button.toggleValue();
+
       if (this.currentValue == this.numButtons) {
-        setTimeout(() => {
-          alert(WIN_MESSAGE); // Delay the alert to allow the UI to update
-          this.resetGame();
-        }, 100); // Slight delay to show the last button's number
+        alert(WIN_MESSAGE);
+        this.resetGame();
       }
       this.currentValue++;
     } else {
-      this.handleLose(); // Call a dedicated method for losing
+      alert(LOSE_MESSAGE);
+      this.resetGame();
     }
   }
 
-  
-  // resetGame() {
-  //   this.container.innerHTML = "";
-  //   this.currentValue = 1;
-  // }
   resetGame() {
-    this.container.innerHTML = ""; // Clear all buttons
-    this.currentValue = 1; // Reset the sequence counter
-    this.buttons = []; // Clear the buttons array
+    this.container.innerHTML = "";
+    this.currentValue = 1;
   }
-  
 }
 
 /**
