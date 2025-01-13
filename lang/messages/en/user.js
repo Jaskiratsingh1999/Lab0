@@ -1,3 +1,13 @@
-export const INPUT_MESSAGE = "Please enter a number between 3 and 7.";
-export const WIN_MESSAGE = "Excellent memory!";
-export const LOSE_MESSAGE = "Wrong order! Revealing the correct sequence.";
+// lang/messages/en/user.js
+
+const MESSAGES = {
+    INPUT_LABEL: "kine buttons dikhane hai?",
+    GO_BUTTON_TEXT: "start karo",
+    INPUT_VALIDATION_ALERT: "number likho",
+    EXCELLENT_MEMORY: "goodddddddddddddddddddddddd",
+    WRONG_ORDER: "baddddddddd",
+    GAME_OVER: "doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+};
+
+// Exporting the messages object so that it can be imported in script.js
+export default MESSAGES;
